@@ -21,6 +21,11 @@ def search(keyword)
 
     xml = REXML::Document.new(response.body)
 
+    if xml.root.elements['/rdf:RDF/status:Status'].nil?
+      STDERR.puts "Fatal error"
+      return
+    end
+
     if xml.root.elements['/rdf:RDF/status:Status'].attributes['totalResRet'] == '0'
       STDERR.puts "No results"
       return
