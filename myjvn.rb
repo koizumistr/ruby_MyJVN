@@ -7,12 +7,18 @@ def init(proxy_addr = nil, proxy_port = nil)
   @proxy_port = proxy_port
 end
 
+def printval(item, elem_name)
+  item.elements.each(elem_name) do |elem|
+    print elem_name + ": " + elem.text + "\n"
+  end
+end
+
 def search(keyword)
   http = Net::HTTP::Proxy(@proxy_addr, @proxy_port).new('jvndb.jvn.jp', 80)
   http.start do | session |
     time = Time.new
     start_year = time.year - 3
-    puts "From " + start_year.to_s
+    puts "Vuls of '" + keyword + "' from " + start_year.to_s
     response = session.get("/myjvn?method=getVulnOverviewList&rangeDatePublic=n&rangeDatePublished=n&rangeDateFirstPublished=n&keyword=#{keyword}&lang=ja&xsl=1&dateFirstPublishedStartY=#{start_year}")
     if response.code != '200'
       STDERR.puts "#{response.code} - #{response.message}"
@@ -32,15 +38,38 @@ def search(keyword)
     end
 
     xml.root.elements.each('/rdf:RDF/item') do |item|
-      print item.elements['sec:identifier'].text,"\n\t",item.elements['title'].text, "\n\t", item.elements['dcterms:modified'].text,"\n"
+      puts "==================================================="
+      print "title: " + item.elements['title'].text + "\n"
+      print "link: " + item.elements['link'].text + "\n"
+      printval(item, 'description')
+      printval(item, 'dc:language')
+      printval(item, 'dc:publisher')
+      printval(item, 'dc:rights')
+      printval(item, 'dc:creator')
+      printval(item, 'dc:subject')
+      printval(item, 'dc:identifier')
+      printval(item, 'dc:relation')
+      printval(item, 'sec:identifier')
+      printval(item, 'sec:references')
+#      printval(item, 'sec:cpe-item')
       item.elements.each('sec:cvss') do |sec_cvss|
-        print "\t",sec_cvss.attributes['vector'],"\t", sec_cvss.attributes['score'], "\n"
+        puts "cvss:version: " + sec_cvss.attributes['version']
+        if not sec_cvss.attributes['type'].nil?
+          puts "cvss:type: " + sec_cvss.attributes['type']
+        end
+        puts "cvss:severity: " + sec_cvss.attributes['severity']
+        puts "cvss:score: " + sec_cvss.attributes['score']
+        puts "cvss:vector: " + sec_cvss.attributes['vector']
       end
+      printval(item, 'dc:date')
+      printval(item, 'dcterms:issued')
+      printval(item, 'dcterms:modified')
     end
     
   end
 end
 
 init()  # proxy なし
-#search("postgresql")  # PostgreSQLをキーワードにして脆弱性情報取得
-search("struts")
+search("postgresql")  # PostgreSQLをキーワードにして脆弱性情報取得
+#search("struts")
+#search("OpenSSL")
