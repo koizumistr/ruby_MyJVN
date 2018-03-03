@@ -99,22 +99,24 @@ def search(keyword)
         puts "cvss:severity: " + sec_cvss.attributes['severity']
         puts "cvss:score: " + sec_cvss.attributes['score']
         puts "cvss:vector: " + sec_cvss.attributes['vector']
-        mets = sec_cvss.attributes['vector'].match(/\(AV:(?<av>\w{1})\/AC:(?<ac>\w{1})\/Au:(?<au>\w{1})\/C:(?<c>\w{1})\/I:(?<i>\w{1})\/A:(?<a>\w{1})/)
-        puts "\tAccess Vector: " + mets[:av]
-        puts "\tAccess Complexity: " + mets[:ac]
-        puts "\tAuthentication: " + mets[:au]
-        puts "\tConfidentiality Impact: " + mets[:c]
-        puts "\tIntegrity Impact: " + mets[:i]
-        puts "\tAvailability Impact: " + mets[:a]
-        result =  score_calc_v2(mets[:av], mets[:ac], mets[:au], mets[:c], mets[:i], mets[:a])
-        puts "calc score: " + result.to_s
-        print "calc severity: "
-        if result >= 7.0
-          puts "High"
-        elsif result >= 4.0
-          puts "Medium"
-        else
-          puts "Low"
+        if not sec_cvss.attributes['vector'].nil? and sec_cvss.attributes['vector'].length > 0
+          mets = sec_cvss.attributes['vector'].match(/\(AV:(?<av>\w{1})\/AC:(?<ac>\w{1})\/Au:(?<au>\w{1})\/C:(?<c>\w{1})\/I:(?<i>\w{1})\/A:(?<a>\w{1})/)
+          puts "\tAccess Vector: " + mets[:av]
+          puts "\tAccess Complexity: " + mets[:ac]
+          puts "\tAuthentication: " + mets[:au]
+          puts "\tConfidentiality Impact: " + mets[:c]
+          puts "\tIntegrity Impact: " + mets[:i]
+          puts "\tAvailability Impact: " + mets[:a]
+          result =  score_calc_v2(mets[:av], mets[:ac], mets[:au], mets[:c], mets[:i], mets[:a])
+          puts "calc score: " + result.to_s
+          print "calc severity: "
+          if result >= 7.0
+            puts "High"
+          elsif result >= 4.0
+            puts "Medium"
+          else
+            puts "Low"
+          end
         end
       end
       printval(item, 'dc:date')
