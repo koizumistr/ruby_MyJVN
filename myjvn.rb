@@ -1,5 +1,5 @@
 # coding: utf-8
-require 'net/http'
+require 'net/https'
 require 'rexml/document'
 
 def init(proxy_addr = nil, proxy_port = nil)
@@ -56,7 +56,10 @@ def score_calc_v2(av_c, ac_c, au_c, c_c, i_c, a_c)
 end
 
 def search(keyword)
-  http = Net::HTTP::Proxy(@proxy_addr, @proxy_port).new('jvndb.jvn.jp', 80)
+  http = Net::HTTP::Proxy(@proxy_addr, @proxy_port).new('jvndb.jvn.jp', 443)
+  http.use_ssl = true
+  http.ca_file = './DigiCertHighAssuranceEVRootCA.pem'
+  http.verify_mode = OpenSSL::SSL::VERIFY_PEER
   http.start do | session |
     time = Time.new
     start_year = time.year - 3
@@ -128,5 +131,5 @@ end
 
 init()  # proxy なし
 search("postgresql")  # PostgreSQLをキーワードにして脆弱性情報取得
-#search("struts")
-#search("OpenSSL")
+search("struts")
+search("OpenSSL")
