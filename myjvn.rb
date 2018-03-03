@@ -54,9 +54,6 @@ def search(keyword)
 #      printval(item, 'sec:cpe-item')
       item.elements.each('sec:cvss') do |sec_cvss|
         puts "cvss:version: " + sec_cvss.attributes['version']
-        if not sec_cvss.attributes['type'].nil?
-          puts "cvss:type: " + sec_cvss.attributes['type']
-        end
         puts "cvss:severity: " + sec_cvss.attributes['severity']
         puts "cvss:score: " + sec_cvss.attributes['score']
         puts "cvss:vector: " + sec_cvss.attributes['vector']
