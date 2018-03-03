@@ -33,8 +33,9 @@ def search(keyword)
 
     xml.root.elements.each('/rdf:RDF/item') do |item|
       print item.elements['sec:identifier'].text,"\n\t",item.elements['title'].text, "\n\t", item.elements['dcterms:modified'].text,"\n"
-      sec_cvss = item.elements['sec:cvss']
-      print "\t",sec_cvss.attributes['vector'],"\t", sec_cvss.attributes['score'], "\n"
+      item.elements.each('sec:cvss') do |sec_cvss|
+        print "\t",sec_cvss.attributes['vector'],"\t", sec_cvss.attributes['score'], "\n"
+      end
     end
     
   end
