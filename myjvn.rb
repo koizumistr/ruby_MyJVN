@@ -8,8 +8,8 @@ def init(proxy_addr = nil, proxy_port = nil)
 end
 
 def search(keyword)
-
-  Net::HTTP::Proxy(@proxy_addr, @proxy_port).start('jvndb.jvn.jp', 80) do | session |
+  http = Net::HTTP::Proxy(@proxy_addr, @proxy_port).new('jvndb.jvn.jp', 80)
+  http.start do | session |
     time = Time.new
     start_year = time.year - 3
     puts "From " + start_year.to_s
