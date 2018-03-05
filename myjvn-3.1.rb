@@ -62,12 +62,12 @@ def search(keyword)
         if not sec_cvss.attributes['vector'].nil? and sec_cvss.attributes['vector'].length > 0
           result = CvssInfo.new(sec_cvss.attributes['vector'].match(/(([A-Zu:\/]{26}))/)[1], '2.0')
           mets = sec_cvss.attributes['vector'].match(/\(AV:(?<av>\w{1})\/AC:(?<ac>\w{1})\/Au:(?<au>\w{1})\/C:(?<c>\w{1})\/I:(?<i>\w{1})\/A:(?<a>\w{1})\)/)
-          puts "\tAccess Vector: " + mets[:av]
-          puts "\tAccess Complexity: " + mets[:ac]
-          puts "\tAuthentication: " + mets[:au]
-          puts "\tConfidentiality Impact: " + mets[:c]
-          puts "\tIntegrity Impact: " + mets[:i]
-          puts "\tAvailability Impact: " + mets[:a]
+          puts "\tAccess Vector: " + mets[:av] + " " + result.av_str
+          puts "\tAccess Complexity: " + mets[:ac] + " " + result.ac_str
+          puts "\tAuthentication: " + mets[:au] + " " + result.au_str
+          puts "\tConfidentiality Impact: " + mets[:c] + " " + result.c_str
+          puts "\tIntegrity Impact: " + mets[:i] + " " + result.i_str
+          puts "\tAvailability Impact: " + mets[:a] + " " + result.a_str
           puts "calc score: " + result.score.to_s
           puts "calc severity: " + result.severity
         end
