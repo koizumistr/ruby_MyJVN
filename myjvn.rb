@@ -66,26 +66,25 @@ def search(keyword)
           result = CvssInfo.new(sec_cvss.attributes['vector'], sec_cvss.attributes['version'])
           if sec_cvss.attributes['version'] == '3.0'
             mets = sec_cvss.attributes['vector'].match(/CVSS:3.0\/AV:(?<av>\w{1})\/AC:(?<ac>\w{1})\/PR:(?<pr>\w{1})\/UI:(?<ui>\w{1})\/S:(?<s>\w{1})\/C:(?<c>\w{1})\/I:(?<i>\w{1})\/A:(?<a>\w{1})/)
-            puts "\tAttack Vector: " + mets[:av]
-            puts "\tAttack Complexity: " + mets[:ac]
-            puts "\tPrivileges Required: " + mets[:pr]
-            puts "\tUser Interaction): " + mets[:ui]
-            puts "\tScope: " + mets[:s]
-            puts "\tConfidentiality Impact: " + mets[:c]
-            puts "\tIntegrity Impact: " + mets[:i]
-            puts "\tAvailability Impact: " + mets[:a]
+            puts "\tAttack Vector: " + mets[:av] + " " + result.av_str
+            puts "\tAttack Complexity: " + mets[:ac] + " " + result.ac_str
+            puts "\tPrivileges Required: " + mets[:pr] + " " + result.pr_str
+            puts "\tUser Interaction: " + mets[:ui] + " " + result.ui_str
+            puts "\tScope: " + mets[:s] + " " + result.s_str
+            puts "\tConfidentiality Impact: " + mets[:c] + " " + result.c_str
+            puts "\tIntegrity Impact: " + mets[:i] + " " + result.i_str
+            puts "\tAvailability Impact: " + mets[:a] + " " + result.a_str
           elsif sec_cvss.attributes['version'] == '2.0'
             mets = sec_cvss.attributes['vector'].match(/AV:(?<av>\w{1})\/AC:(?<ac>\w{1})\/Au:(?<au>\w{1})\/C:(?<c>\w{1})\/I:(?<i>\w{1})\/A:(?<a>\w{1})/)
-            puts "\tAccess Vector: " + mets[:av]
-            puts "\tAccess Complexity: " + mets[:ac]
-            puts "\tAuthentication: " + mets[:au]
-            puts "\tConfidentiality Impact: " + mets[:c]
-            puts "\tIntegrity Impact: " + mets[:i]
-            puts "\tAvailability Impact: " + mets[:a]
+            puts "\tAccess Vector: " + mets[:av] + " " + result.av_str
+            puts "\tAccess Complexity: " + mets[:ac] + " " + result.ac_str
+            puts "\tAuthentication: " + mets[:au] + " " + result.au_str
+            puts "\tConfidentiality Impact: " + mets[:c] + " " + result.c_str
+            puts "\tIntegrity Impact: " + mets[:i] + " " + result.i_str
+            puts "\tAvailability Impact: " + mets[:a] + " " + result.a_str
           end
           puts "calc score: " + result.score.to_s
-          print "calc severity: "
-          puts result.severity
+          puts "calc severity: " + result.severity
           puts "cvss:type: " + sec_cvss.attributes['type']
         end
       end
