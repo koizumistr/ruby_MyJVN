@@ -6,8 +6,8 @@ RubyからMyJVN APIを利用するサンプルです。以下の例が含まれ�
 
 ## 詳細
 
-最近MyJVN APIのバージョンが上がり(変わり？)ましたが、どちらにも対応しています。
-最新版(HND)に対応しているのがmyjvn.rbで、旧バージョン(3.1)に対応しているのがmyjvn-3.1.rbです。
+最近MyJVN APIのバージョンが上がり(変わり？)ましたが、getVulnDetailInfoは例は最新版(HND)のみに、getVulnOverviewListの例はどちらにも対応しています。
+最新版(HND)に対応しているのがoverview.rbで、旧バージョン(3.1)に対応しているのがoverview-3.1.rbです。
 
 ## 動作環境
 
