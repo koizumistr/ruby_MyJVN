@@ -1,6 +1,8 @@
 # MyJVN API利用サンプル(Ruby)
 
-RubyからMyJVN APIを利用するサンプルです。getVulnOverviewListを使って情報を取得する例になっています。
+RubyからMyJVN APIを利用するサンプルです。以下の例が含まれています。
+* getVulnOverviewListを使って、指定されたキーワードに関連する脆弱性の一覧を取得する例
+* getVulnDetailInfoを使って、指定されたIDに対応する脆弱性の詳細情報を取得する例
 
 ## 詳細
 
