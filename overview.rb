@@ -85,8 +85,8 @@ def search(keyword)
           end
           puts "calc score: " + result.score.to_s
           puts "calc severity: " + result.severity
-          puts "cvss:type: " + sec_cvss.attributes['type']
         end
+        puts "cvss:type: " + sec_cvss.attributes['type']
       end
       printval(item, 'dc:date')
       printval(item, 'dcterms:issued')

@@ -51,14 +51,14 @@ def getinfo(id)
       severity = cvss.elements['Severity'].text
       score = cvss.elements['Base'].text # score
       vector = cvss.elements['Vector'].text
-      if not vector.nil? and vector.length > 0
-        result = CvssInfo.new(vector, version)
-      end
       puts "version: " + version
       puts "\tscore: " + score
       puts "\tseverity: " + severity
-      puts "\tcalc score: " + result.score.to_s
-      puts "\tcalc severity: " + result.severity
+      if not vector.nil? and vector.length > 0
+        result = CvssInfo.new(vector, version)
+        puts "\tcalc score: " + result.score.to_s
+        puts "\tcalc severity: " + result.severity
+      end
     end
     data.elements.each('Impact/ImpactItem') do |item|
       puts "ImpactItemDesc: " + item.elements['Description'].text
