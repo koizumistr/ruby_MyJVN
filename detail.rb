@@ -66,6 +66,13 @@ def getinfo(id)
     data.elements.each('Solution/SolutionItem') do |item|
       puts "SolutionItemDesc: " + item.elements['Description'].text
     end
+    data.elements.each('Related/RelatedItem') do |item|
+      puts "-- RelatedItem --"
+      printval(item, 'Name')
+      printval(item, 'VulinfoID')
+      printval(item, 'Title')
+      printval(item, 'URL')
+    end
     puts "DateFirstPublished: " + data.elements['DateFirstPublished'].text
     puts "DateLastUpdated: " + data.elements['DateLastUpdated'].text
     puts "DatePublic: " + data.elements['DatePublic'].text
