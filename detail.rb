@@ -18,7 +18,7 @@ end
 def getinfo(id)
   http = Net::HTTP::Proxy(@proxy_addr, @proxy_port).new('jvndb.jvn.jp', 443)
   http.use_ssl = true
-  http.ca_file = './DigiCertHighAssuranceEVRootCA.pem'
+  http.ca_file = './DigiCertGlobalRootG2.crt.pem'
   http.verify_mode = OpenSSL::SSL::VERIFY_PEER
   http.start do | session |
     puts "=== Info of " + id + " ==="

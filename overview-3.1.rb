@@ -4,6 +4,8 @@ require 'rexml/document'
 
 require_relative 'cvssinfo'
 
+# 本ファイルには歴史的価値しかありません。
+
 def init(proxy_addr = nil, proxy_port = nil)
   @proxy_addr = proxy_addr
   @proxy_port = proxy_port
@@ -78,6 +80,9 @@ def search(keyword)
     end
   end
 end
+
+puts "MyJVN API 3.1 is obsolete. You should use overview.rb. / MyJVN API 3.1は廃止されました。overview.rb を使ってください。"
+exit!
 
 init()  # proxy なし
 search("postgresql")  # PostgreSQLをキーワードにして脆弱性情報取得
