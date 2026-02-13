@@ -12,58 +12,58 @@ class CvssInfo
         @severity = 'Unknown'
         return
       elsif vector.size != 44
-        raise "illegal vector"
+        raise 'illegal vector'
       end
 
       @version = ver
 
       mets = vector.match(/CVSS:3.0\/AV:(?<av>\w{1})\/AC:(?<ac>\w{1})\/PR:(?<pr>\w{1})\/UI:(?<ui>\w{1})\/S:(?<s>\w{1})\/C:(?<c>\w{1})\/I:(?<i>\w{1})\/A:(?<a>\w{1})/)
       case mets[:s]
-      when 'U' then
+      when 'U'
         s_changed = false
-        @s_str = "Unchanged"
-      when 'C' then
+        @s_str = 'Unchanged'
+      when 'C'
         s_changed = true
-        @s_str = "Changed"
+        @s_str = 'Changed'
       end
 
       case mets[:av]
-      when 'N' then
+      when 'N'
         av = 0.85
-        @av_str = "Network"
-      when 'A' then
+        @av_str = 'Network'
+      when 'A'
         av = 0.62
-        @av_str = "Adjacent Network"
-      when 'L' then
+        @av_str = 'Adjacent Network'
+      when 'L'
         av = 0.55
-        @av_str = "Local"
-      when 'P' then
+        @av_str = 'Local'
+      when 'P'
         av = 0.20
-        @av_str = "Physical"
-      end      
+        @av_str = 'Physical'
+      end
 
       case mets[:ac]
-      when 'H' then
+      when 'H'
         ac = 0.44
-        @ac_str = "High"
-      when 'L' then
+        @ac_str = 'High'
+      when 'L'
         ac = 0.77
-        @ac_str = "Low"
+        @ac_str = 'Low'
       end
 
       case mets[:pr]
-      when 'N' then
+      when 'N'
         pr = 0.85
-        @pr_str = "None"
-      when 'L' then
-        @pr_str = "Low"
+        @pr_str = 'None'
+      when 'L'
+        @pr_str = 'Low'
         if s_changed
           pr = 0.68
         else
           pr = 0.62
         end
-      when 'H' then
-        @pr_str = "High"
+      when 'H'
+        @pr_str = 'High'
         if s_changed
           pr = 0.50
         else
@@ -72,12 +72,12 @@ class CvssInfo
       end
 
       case mets[:ui]
-      when 'N' then
+      when 'N'
         ui = 0.85
-        @ui_str = "None"
-      when 'R' then
+        @ui_str = 'None'
+      when 'R'
         ui = 0.62
-        @ui_str = "Required"
+        @ui_str = 'Required'
       end
 
 #      case mets[:s]
@@ -86,39 +86,39 @@ class CvssInfo
 #      end
 
       case mets[:c]
-      when 'H' then
+      when 'H'
         c = 0.56
-        @c_str = "High"
-      when 'L' then
+        @c_str = 'High'
+      when 'L'
         c = 0.22
-        @c_str = "Low"
-      when 'N' then
-        c = 0.0 
-        @c_str = "None"
+        @c_str = 'Low'
+      when 'N'
+        c = 0.0
+        @c_str = 'None'
       end
 
       case mets[:i]
-      when 'H' then
+      when 'H'
         i = 0.56
-        @i_str = "High"
-      when 'L' then
+        @i_str = 'High'
+      when 'L'
         i = 0.22
-        @i_str = "Low"
-      when 'N' then
-        i = 0.0 
-        @i_str = "None"
+        @i_str = 'Low'
+      when 'N'
+        i = 0.0
+        @i_str = 'None'
       end
 
       case mets[:a]
-      when 'H' then
+      when 'H'
         a = 0.56
-        @a_str = "High"
-      when 'L' then
+        @a_str = 'High'
+      when 'L'
         a = 0.22
-        @a_str = "Low"
-      when 'N' then
-        a = 0.0 
-        @a_str = "None"
+        @a_str = 'Low'
+      when 'N'
+        a = 0.0
+        @a_str = 'None'
       end
 
       exp = 8.22 * av * ac * pr * ui
@@ -136,93 +136,93 @@ class CvssInfo
       @score = (base_score * 10).ceil / 10.0
 
       if @score >= 9.0
-        @severity = "Critical"
+        @severity = 'Critical'
       elsif @score >= 7.0
-        @severity = "High"
+        @severity = 'High'
       elsif @score >= 4.0
-        @severity = "Medium"
+        @severity = 'Medium'
       elsif @score >= 0.1
-        @severity = "Low"
+        @severity = 'Low'
       else
-        @severity = "None"
+        @severity = 'None'
       end
     elsif @version == '2.0'
       if vector.size == 0
         @severity = 'Unknown'
         return
       elsif vector.size != 26
-        raise "illegal vector"
+        raise 'illegal vector'
       end
 
       mets = vector.match(/AV:(?<av>\w{1})\/AC:(?<ac>\w{1})\/Au:(?<au>\w{1})\/C:(?<c>\w{1})\/I:(?<i>\w{1})\/A:(?<a>\w{1})/)
       case mets[:av]
-      when 'L' then
+      when 'L'
         av = 0.395
-        @av_str = "Local"
-      when 'A' then
+        @av_str = 'Local'
+      when 'A'
         av = 0.464
-        @av_str = "Adjacent Network"
-      when 'N' then
+        @av_str = 'Adjacent Network'
+      when 'N'
         av = 1.0
-        @av_str = "Network"
+        @av_str = 'Network'
       end
       case mets[:ac]
-      when 'H' then
+      when 'H'
         ac = 0.35
-        @ac_str = "High"
-      when 'M' then
+        @ac_str = 'High'
+      when 'M'
         ac = 0.61
-        @ac_str = "Medium"
-      when 'L' then
+        @ac_str = 'Medium'
+      when 'L'
         ac = 0.71
-        @ac_str = "Low"
+        @ac_str = 'Low'
       end
       case mets[:au]
-      when 'M' then
+      when 'M'
         au = 0.45
-        @au_str = "Multiple"
-      when 'S' then
+        @au_str = 'Multiple'
+      when 'S'
         au = 0.56
-        @au_str = "Single"
-      when 'N' then
+        @au_str = 'Single'
+      when 'N'
         au = 0.704
-        @au_str = "None"
+        @au_str = 'None'
       end
       case mets[:c]
-      when 'N' then
+      when 'N'
         c = 0.0
-        @c_str = "None"
-      when 'P' then
+        @c_str = 'None'
+      when 'P'
         c = 0.275
-        @c_str = "Partial"
-      when 'C' then
+        @c_str = 'Partial'
+      when 'C'
         c = 0.660
-        @c_str = "Complete"
+        @c_str = 'Complete'
       end
       case mets[:i]
-      when 'N' then
+      when 'N'
         i = 0.0
-        @i_str = "None"
-      when 'P' then
+        @i_str = 'None'
+      when 'P'
         i = 0.275
-        @i_str = "Partial"
-      when 'C' then
+        @i_str = 'Partial'
+      when 'C'
         i = 0.660
-        @i_str = "Complete"
+        @i_str = 'Complete'
       end
       case mets[:a]
-      when 'N' then
+      when 'N'
         a = 0.0
-        @a_str = "None"
-      when 'P' then
+        @a_str = 'None'
+      when 'P'
         a = 0.275
-        @a_str = "Partial"
-      when 'C' then
+        @a_str = 'Partial'
+      when 'C'
         a = 0.660
-        @a_str = "Complete"
+        @a_str = 'Complete'
       end
 
-      exp = 20 * av * ac *au
+      exp = 20 * av * ac * au
       imp = 10.41 * (1 - (1 - c) * (1 - i) * (1 - a))
       if imp > 0
         f_imp = 1.176
@@ -233,15 +233,14 @@ class CvssInfo
       @score = base_score.round(1)
 
       if @score >= 7.0
-        @severity = "High"
+        @severity = 'High'
       elsif @score >= 4.0
-        @severity = "Medium"
+        @severity = 'Medium'
       else
-        @severity = "Low"
+        @severity = 'Low'
       end
     else
-      raise "unknown version"
+      raise 'unknown version'
     end
-
   end
 end
