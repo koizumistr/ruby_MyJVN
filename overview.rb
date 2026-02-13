@@ -1,4 +1,5 @@
 # coding: utf-8
+
 require 'net/https'
 require 'rexml/document'
 
@@ -11,7 +12,7 @@ end
 
 def printval(item, elem_name)
   item.elements.each(elem_name) do |elem|
-    print elem_name + ": " + elem.text + "\n"
+    print "#{elem_name}: #{elem.text}\n"
   end
 end
 
@@ -20,32 +21,32 @@ def search(keyword)
   http.use_ssl = true
   http.ca_file = './DigiCertGlobalRootG2.crt.pem'
   http.verify_mode = OpenSSL::SSL::VERIFY_PEER
-  http.start do | session |
+  http.start do |session|
     time = Time.new
     start_year = time.year - 3
-    puts "Vuls of '" + keyword + "' from " + start_year.to_s
+    puts "Vuls of '#{keyword}' from #{start_year}"
     response = session.get("/myjvn?method=getVulnOverviewList&feed=hnd&rangeDatePublic=n&rangeDatePublished=n&rangeDateFirstPublished=n&keyword=#{keyword}&lang=ja&xsl=1&dateFirstPublishedStartY=#{start_year}")
     if response.code != '200'
-      STDERR.puts "#{response.code} - #{response.message}"
-      return
+      warn "#{response.code} - #{response.message}"
+      break
     end
 
     xml = REXML::Document.new(response.body)
 
     if xml.root.elements['/rdf:RDF/status:Status'].nil?
-      STDERR.puts "Fatal error"
-      return
+      warn 'Fatal error'
+      break
     end
 
     if xml.root.elements['/rdf:RDF/status:Status'].attributes['totalResRet'] == '0'
-      STDERR.puts "No results"
-      return
+      warn 'No results'
+      break
     end
 
     xml.root.elements.each('/rdf:RDF/item') do |item|
-      puts "==================================================="
-      print "title: " + item.elements['title'].text + "\n"
-      print "link: " + item.elements['link'].text + "\n"
+      puts '==================================================='
+      print "title: #{item.elements['title'].text}\n"
+      print "link: #{item.elements['link'].text}\n"
       printval(item, 'description')
       printval(item, 'dc:language')
       printval(item, 'dc:publisher')
@@ -58,35 +59,35 @@ def search(keyword)
       printval(item, 'sec:references')
 #      printval(item, 'sec:cpe-item')
       item.elements.each('sec:cvss') do |sec_cvss|
-        puts "cvss:version: " + sec_cvss.attributes['version']
-        puts "cvss:severity: " + sec_cvss.attributes['severity']
-        puts "cvss:score: " + sec_cvss.attributes['score']
-        puts "cvss:vector: " + sec_cvss.attributes['vector']
-        if not sec_cvss.attributes['vector'].nil? and sec_cvss.attributes['vector'].length > 0
+        puts "cvss:version: #{sec_cvss.attributes['version']}"
+        puts "cvss:severity: #{sec_cvss.attributes['severity']}"
+        puts "cvss:score: #{sec_cvss.attributes['score']}"
+        puts "cvss:vector: #{sec_cvss.attributes['vector']}"
+        if !sec_cvss.attributes['vector'].nil? && !sec_cvss.attributes['vector'].empty?
           result = CvssInfo.new(sec_cvss.attributes['vector'], sec_cvss.attributes['version'])
           if sec_cvss.attributes['version'] == '3.0'
             mets = sec_cvss.attributes['vector'].match(/CVSS:3.0\/AV:(?<av>\w{1})\/AC:(?<ac>\w{1})\/PR:(?<pr>\w{1})\/UI:(?<ui>\w{1})\/S:(?<s>\w{1})\/C:(?<c>\w{1})\/I:(?<i>\w{1})\/A:(?<a>\w{1})/)
-            puts "\tAttack Vector: " + mets[:av] + " " + result.av_str
-            puts "\tAttack Complexity: " + mets[:ac] + " " + result.ac_str
-            puts "\tPrivileges Required: " + mets[:pr] + " " + result.pr_str
-            puts "\tUser Interaction: " + mets[:ui] + " " + result.ui_str
-            puts "\tScope: " + mets[:s] + " " + result.s_str
-            puts "\tConfidentiality Impact: " + mets[:c] + " " + result.c_str
-            puts "\tIntegrity Impact: " + mets[:i] + " " + result.i_str
-            puts "\tAvailability Impact: " + mets[:a] + " " + result.a_str
+            puts "\tAttack Vector: #{mets[:av]} #{result.av_str}"
+            puts "\tAttack Complexity: #{mets[:ac]} #{result.ac_str}"
+            puts "\tPrivileges Required: #{mets[:pr]} #{result.pr_str}"
+            puts "\tUser Interaction: #{mets[:ui]} #{result.ui_str}"
+            puts "\tScope: #{mets[:s]} #{result.s_str}"
+            puts "\tConfidentiality Impact: #{mets[:c]} #{result.c_str}"
+            puts "\tIntegrity Impact: #{mets[:i]} #{result.i_str}"
+            puts "\tAvailability Impact: #{mets[:a]} #{result.a_str}"
           elsif sec_cvss.attributes['version'] == '2.0'
             mets = sec_cvss.attributes['vector'].match(/AV:(?<av>\w{1})\/AC:(?<ac>\w{1})\/Au:(?<au>\w{1})\/C:(?<c>\w{1})\/I:(?<i>\w{1})\/A:(?<a>\w{1})/)
-            puts "\tAccess Vector: " + mets[:av] + " " + result.av_str
-            puts "\tAccess Complexity: " + mets[:ac] + " " + result.ac_str
-            puts "\tAuthentication: " + mets[:au] + " " + result.au_str
-            puts "\tConfidentiality Impact: " + mets[:c] + " " + result.c_str
-            puts "\tIntegrity Impact: " + mets[:i] + " " + result.i_str
-            puts "\tAvailability Impact: " + mets[:a] + " " + result.a_str
+            puts "\tAccess Vector: #{mets[:av]} #{result.av_str}"
+            puts "\tAccess Complexity: #{mets[:ac]} #{result.ac_str}"
+            puts "\tAuthentication: #{mets[:au]} #{result.au_str}"
+            puts "\tConfidentiality Impact: #{mets[:c]} #{result.c_str}"
+            puts "\tIntegrity Impact: #{mets[:i]} #{result.i_str}"
+            puts "\tAvailability Impact: #{mets[:a]} #{result.a_str}"
           end
-          puts "calc score: " + result.score.to_s
-          puts "calc severity: " + result.severity
+          puts "calc score: #{result.score}"
+          puts "calc severity: #{result.severity}"
         end
-        puts "cvss:type: " + sec_cvss.attributes['type']
+        puts "cvss:type: #{sec_cvss.attributes['type']}"
       end
       printval(item, 'dc:date')
       printval(item, 'dcterms:issued')
@@ -95,7 +96,7 @@ def search(keyword)
   end
 end
 
-init()  # proxy なし
-search("postgresql")  # PostgreSQLをキーワードにして脆弱性情報取得
-search("struts")
-search("OpenSSL")
+init # proxy なし
+search('postgresql') # PostgreSQLをキーワードにして脆弱性情報取得
+search('struts')
+search('OpenSSL')
